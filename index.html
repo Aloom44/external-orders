@@ -417,7 +417,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">مصاريف الشحن</label>
-                        <input type="number" class="form-control" id="shippingCost" min="0" step="0.01" value="0">
+                        <input type="number" class="form-control" id="shippingCost" min="0" step="0.01" value="50">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">الخصم</label>
@@ -451,16 +451,9 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-12 mb-3">
                         <label class="form-label">اسم الصفحة</label>
                         <input type="text" class="form-control" id="pageName" placeholder="مثال: دكتور نسرين">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">عميل VIP</label>
-                        <select class="form-select" id="isVip">
-                            <option value="false">لا</option>
-                            <option value="true">نعم</option>
-                        </select>
                     </div>
                 </div>
 
@@ -700,7 +693,6 @@
                 // معلومات إضافية
                 notes: document.getElementById('notes').value || '',
                 page_name: document.getElementById('pageName').value || '',
-                is_vip: document.getElementById('isVip').value === 'true',
                 
                 // معلومات النظام
                 api_key: apiKey,
