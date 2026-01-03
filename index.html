@@ -425,7 +425,7 @@
         }
         
         // تحديث قوائم المنتجات
-        function updateProductSelects() {
+        window.updateProductSelects = function updateProductSelects() {
             document.querySelectorAll('.product-select').forEach(select => {
                 select.innerHTML = '<option value="">-- اختر المنتج --</option>';
                 productsData.forEach(product => {
