@@ -740,11 +740,11 @@
                         document.getElementById('orderFullAddress').textContent = `${orderData.province} - ${orderData.address_details}`;
                         document.getElementById('orderPageName').textContent = orderData.page_name || 'غير محدد';
                         document.getElementById('orderEmployee').textContent = orderData.employee_name || 'غير معروف';
-                        document.getElementById('orderShipping').textContent = shipping.toFixed(2);
-                        document.getElementById('orderTotal').textContent = grandTotal.toFixed(2);
+                        document.getElementById('orderShipping').textContent = parseFloat(shipping.toFixed(2));
+                        document.getElementById('orderTotal').textContent = parseFloat(grandTotal.toFixed(2));
                         
                         // عرض قائمة المنتجات في سطر واحد
-                        const productsList = products.map(p => `${p.name} (${p.size}) × ${p.quantity} = ${(p.price * p.quantity).toFixed(2)} جنيه`).join(' | ');
+                        const productsList = products.map(p => `${p.name} (${p.size}) × ${p.quantity} = ${parseFloat((p.price * p.quantity).toFixed(2))} جنيه`).join(' | ');
                         document.getElementById('orderProductsList').textContent = productsList;
                         
                         // إيقاف الاستماع
