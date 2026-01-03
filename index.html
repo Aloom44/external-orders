@@ -5,192 +5,285 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إضافة طلب جديد - Rumex</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: #f5f7fa;
             min-height: 100vh;
-            padding: 10px;
-            font-family: 'Tajawal', 'Segoe UI', sans-serif;
-            margin: 0;
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            padding-top: 80px;
         }
-        .order-card {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            overflow: hidden;
-            border: 2px solid #D4AF37;
-        }
-        .card-header {
-            background: linear-gradient(135deg, #8A1538 0%, #5C0A2E 100%);
+        
+        /* Header */
+        .app-header {
+            background: #2d5f3f;
             color: white;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 3px solid #D4AF37;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .card-header h1 {
-            margin: 0;
-            font-size: 20px;
+        .app-header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .app-header h1 {
+            font-size: 24px;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        .app-header .logo-icon {
+            font-size: 32px;
+        }
+        
+        /* Main Card */
+        .order-card {
+            max-width: 700px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .card-title {
+            padding: 25px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .card-title h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2d5f3f;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .card-body {
-            padding: 15px;
+            padding: 25px;
         }
+        
+        /* Form Elements */
         .form-label {
             font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-            font-size: 13px;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: block;
         }
         .form-control, .form-select {
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            padding: 8px 10px;
-            font-size: 14px;
+            border-radius: 8px;
+            border: 1.5px solid #dee2e6;
+            padding: 12px 15px;
+            font-size: 15px;
+            transition: all 0.2s;
         }
         .form-control:focus, .form-select:focus {
             border-color: #D4AF37;
-            box-shadow: 0 0 0 0.15rem rgba(212, 175, 55, 0.25);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            outline: none;
         }
+        
+        /* Section Dividers */
         .section-title {
-            background: linear-gradient(to right, #8A1538, #5C0A2E);
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin: 15px 0 10px 0;
+            padding: 15px 0 10px 0;
+            margin: 20px 0 15px 0;
             font-weight: 700;
-            color: white;
-            font-size: 14px;
-            border-right: 4px solid #D4AF37;
-        }
-        .btn-submit {
-            background: linear-gradient(135deg, #8A1538 0%, #5C0A2E 100%);
-            border: 2px solid #D4AF37;
-            padding: 12px 25px;
+            color: #2d5f3f;
             font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        /* Buttons */
+        .btn-submit {
+            background: #D4AF37;
+            border: none;
+            padding: 14px 30px;
+            font-size: 17px;
             font-weight: 700;
             border-radius: 8px;
-            color: white;
+            color: #2d5f3f;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 25px;
             transition: all 0.3s;
+            cursor: pointer;
         }
         .btn-submit:hover {
+            background: #2d5f3f;
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(138, 21, 56, 0.4);
-            border-color: #FFD700;
-            background: linear-gradient(135deg, #5C0A2E 0%, #8A1538 100%);
+            box-shadow: 0 4px 12px rgba(45, 95, 63, 0.3);
         }
+        .btn-submit:disabled {
+            background: #adb5bd;
+            color: white;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .product-row {
             background: #f8f9fa;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 8px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #e9ecef;
         }
         .btn-add-product {
-            background: #28a745;
-            color: white;
+            background: #D4AF37;
+            color: #2d5f3f;
             border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            margin-top: 8px;
-            font-size: 13px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .btn-add-product:hover {
+            background: #2d5f3f;
+            color: white;
         }
         .btn-remove-product {
             background: #dc3545;
             color: white;
             border: none;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
+        .btn-remove-product:hover {
+            background: #c82333;
+        }
+        
+        /* Price Summary */
         .price-summary {
-            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-            padding: 12px;
+            background: #f8f9fa;
+            padding: 20px;
             border-radius: 8px;
-            margin-top: 15px;
-            border: 2px solid #D4AF37;
+            margin-top: 20px;
+            border: 1.5px solid #dee2e6;
         }
         .price-row {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
-            font-size: 14px;
+            padding: 8px 0;
+            font-size: 15px;
+            color: #495057;
         }
         .price-row.total {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            color: #8A1538;
+            color: #2d5f3f;
             border-top: 2px solid #D4AF37;
-            padding-top: 10px;
-            margin-top: 8px;
+            padding-top: 15px;
+            margin-top: 10px;
         }
+        
+        /* Loading & Messages */
         .loading {
             display: none;
             text-align: center;
-            padding: 15px;
+            padding: 30px;
         }
+        .loading i {
+            font-size: 40px;
+            color: #D4AF37;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         .success-message {
             display: none;
-            background: #d4edda;
+            background: #d1f2eb;
             border: 2px solid #28a745;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            margin: 10px 0;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
         }
         .success-message h2 {
-            color: #155724;
-            margin-bottom: 10px;
-            font-size: 18px;
+            color: #2d5f3f;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 700;
         }
         .order-code {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 700;
             color: #D4AF37;
-            margin: 10px 0;
+            margin: 15px 0;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         .error-message {
             background: #f8d7da;
             border: 2px solid #dc3545;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 20px;
             color: #721c24;
-            margin: 10px 0;
+            margin: 20px 0;
             display: none;
-            font-size: 14px;
+            font-size: 15px;
         }
         .user-info {
-            background: #fff3cd;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
+            background: #e7f5ee;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
             text-align: center;
+            border: 1.5px solid #2d5f3f;
         }
         .user-info strong {
-            color: #856404;
-            font-size: 14px;
+            color: #2d5f3f;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .user-info i {
+            font-size: 24px;
+            color: #D4AF37;
+            margin-left: 8px;
         }
         
         /* Mobile optimizations */
-        @media (max-width: 576px) {
+        @media (max-width: 768px) {
             body {
-                padding: 5px;
+                padding-top: 70px;
             }
-            .card-header h1 {
-                font-size: 18px;
+            .app-header {
+                padding: 15px 0;
+            }
+            .app-header h1 {
+                font-size: 20px;
+            }
+            .order-card {
+                margin: 10px;
+            }
+            .card-title {
+                padding: 20px;
             }
             .card-body {
-                padding: 10px;
+                padding: 20px;
             }
             .form-label {
                 font-size: 12px;
@@ -234,16 +327,26 @@
     </style>
 </head>
 <body>
+    <!-- App Header -->
+    <div class="app-header">
+        <div class="container">
+            <i class='bx bx-package logo-icon'></i>
+            <h1>Rumex - نظام إدارة الطلبات</h1>
+        </div>
+    </div>
+
     <div class="order-card">
-        <div class="card-header">
-            <h1><i class="fas fa-box"></i> إضافة طلب جديد</h1>
-            <p style="margin: 10px 0 0 0; font-size: 14px;">Rumex - نظام إدارة الطلبات</p>
+        <div class="card-title">
+            <h2>
+                <i class='bx bx-shopping-bag'></i>
+                إضافة طلب جديد
+            </h2>
         </div>
 
         <div class="card-body">
             <!-- معلومات المستخدم -->
             <div class="user-info" id="userInfo">
-                <i class="fas fa-user-circle" style="font-size: 24px;"></i>
+                <i class='bx bx-user-circle'></i>
                 <strong id="userName">جاري التحميل...</strong>
             </div>
 
@@ -252,9 +355,9 @@
 
             <!-- رسالة النجاح -->
             <div class="success-message" id="successMessage">
-                <h2 style="color: #8A1538; margin-bottom: 12px; font-size: 16px; font-weight: 700;"><i class="fas fa-check-circle"></i> تم إضافة الطلب بنجاح!</h2>
+                <h2><i class='bx bx-check-circle'></i> تم إضافة الطلب بنجاح!</h2>
                 
-                <div class="order-details" id="orderDetailsContainer" style="text-align: right; margin: 10px 0; padding: 12px; background: #ffffff; border-radius: 8px; box-shadow: 0 2px 10px rgba(138,21,56,0.15); border: 2px solid #D4AF37;">
+                <div class="order-details" id="orderDetailsContainer" style="text-align: right; margin: 15px 0; padding: 20px; background: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1.5px solid #dee2e6;">
                     <div style="margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #D4AF37;">
                         <strong style="color: #8A1538; font-size: 14px;">تفاصيل الطلب</strong>
                     </div>
@@ -307,21 +410,22 @@
                     </table>
                 </div>
                 
-                <div style="display: flex; gap: 6px; justify-content: center; margin-top: 12px; flex-wrap: wrap;">
-                    <button class="btn btn-sm" onclick="copyOrderDetails(event)" style="background: linear-gradient(135deg, #D4AF37, #C9A961); border: none; color: #5C0A2E; padding: 6px 15px; font-size: 13px; font-weight: 700;">
-                        <i class="fas fa-copy"></i> نسخ
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+                    <button class="btn" onclick="copyOrderDetails(event)" style="background: #D4AF37; border: none; color: #2d5f3f; padding: 10px 25px; font-size: 15px; font-weight: 700; border-radius: 8px; transition: all 0.3s;">
+                        <i class='bx bx-copy'></i> نسخ التفاصيل
                     </button>
-                    <button class="btn btn-sm" onclick="location.reload()" style="background: linear-gradient(135deg, #8A1538, #5C0A2E); border: 1px solid #D4AF37; color: white; padding: 6px 15px; font-size: 13px; font-weight: 700;">
-                        <i class="fas fa-plus"></i> طلب جديد
+                    <button class="btn" onclick="location.reload()" style="background: #2d5f3f; border: none; color: white; padding: 10px 25px; font-size: 15px; font-weight: 700; border-radius: 8px; transition: all 0.3s;">
+                        <i class='bx bx-plus'></i> طلب جديد
                     </button>
                 </div>
+            </div>
             </div>
 
             <!-- فورم الطلب -->
             <form id="orderForm">
                 <!-- بيانات العميل -->
                 <div class="section-title">
-                    <i class="fas fa-user"></i> بيانات العميل
+                    <i class='bx bx-user'></i> بيانات العميل
                 </div>
 
                 <div class="row">
@@ -382,7 +486,7 @@
 
                 <!-- المنتجات -->
                 <div class="section-title">
-                    <i class="fas fa-shopping-cart"></i> المنتجات
+                    <i class='bx bx-package'></i> المنتجات
                 </div>
 
                 <div id="productsContainer">
@@ -410,7 +514,7 @@
                             </div>
                             <div class="col-md-1 mb-2">
                                 <button type="button" class="btn-remove-product" onclick="removeProduct(this)" style="display:none;">
-                                    <i class="fas fa-times"></i>
+                                    <i class='bx bx-x'></i>
                                 </button>
                             </div>
                         </div>
@@ -418,12 +522,12 @@
                 </div>
 
                 <button type="button" class="btn-add-product" onclick="addProduct()">
-                    <i class="fas fa-plus"></i> إضافة منتج آخر
+                    <i class='bx bx-plus'></i> إضافة منتج آخر
                 </button>
 
                 <!-- الأسعار والخصومات -->
                 <div class="section-title">
-                    <i class="fas fa-calculator"></i> التكاليف
+                    <i class='bx bx-calculator'></i> التكاليف
                 </div>
 
                 <div class="row">
@@ -459,7 +563,7 @@
 
                 <!-- معلومات إضافية -->
                 <div class="section-title">
-                    <i class="fas fa-info-circle"></i> معلومات إضافية
+                    <i class='bx bx-info-circle'></i> معلومات إضافية
                 </div>
 
                 <div class="row">
@@ -476,15 +580,13 @@
 
                 <!-- زر الإرسال -->
                 <button type="submit" class="btn-submit">
-                    <i class="fas fa-paper-plane"></i> إرسال الطلب
+                    <i class='bx bx-send'></i> إرسال الطلب
                 </button>
 
                 <!-- Loading -->
                 <div class="loading" id="loading">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">جاري الإرسال...</span>
-                    </div>
-                    <p class="mt-2">جاري إرسال الطلب...</p>
+                    <i class='bx bx-loader-alt'></i>
+                    <p style="margin-top: 15px; font-size: 16px; color: #2d5f3f; font-weight: 600;">جاري إرسال الطلب...</p>
                 </div>
             </form>
         </div>
