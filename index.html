@@ -263,32 +263,34 @@
                             <td style="padding: 6px 0; direction: ltr; text-align: right;"><span id="orderPhone">---</span></td>
                         </tr>
                         <tr style="border-bottom: 1px solid #f0f0f0;">
-                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">المحافظة:</td>
-                            <td style="padding: 6px 0;"><span id="orderProvince">---</span></td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #f0f0f0;">
                             <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">العنوان:</td>
-                            <td style="padding: 6px 0;"><span id="orderAddress">---</span></td>
+                            <td style="padding: 6px 0;"><span id="orderFullAddress">---</span></td>
                         </tr>
                         <tr style="border-bottom: 1px solid #f0f0f0;">
-                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E; vertical-align: top;">المنتجات:</td>
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">المنتجات:</td>
                             <td style="padding: 6px 0;">
-                                <div id="orderProductsList" style="font-size: 11px; line-height: 1.6;">---</div>
+                                <span id="orderProductsList" style="font-size: 11px;">---</span>
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">قيمة الشحن:</td>
+                            <td style="padding: 6px 0;">
+                                <span id="orderShipping">---</span> جنيه
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">المبلغ الإجمالي:</td>
+                            <td style="padding: 6px 0;">
+                                <span id="orderTotal" style="color: #5fb091; font-size: 16px; font-weight: bold;">---</span> جنيه
                             </td>
                         </tr>
                         <tr style="border-bottom: 1px solid #f0f0f0;">
                             <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">اسم الصفحة:</td>
                             <td style="padding: 6px 0;"><span id="orderPageName">---</span></td>
                         </tr>
-                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                        <tr>
                             <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">الموظف:</td>
                             <td style="padding: 6px 0;"><span id="orderEmployee">---</span></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">المبلغ الإجمالي:</td>
-                            <td style="padding: 6px 0;">
-                                <span id="orderTotal" style="color: #5fb091; font-size: 16px; font-weight: bold;">---</span> جنيه
-                            </td>
                         </tr>
                     </table>
                 </div>
@@ -734,16 +736,16 @@
                         // ملء التفاصيل
                         document.getElementById('orderCode').textContent = data.order_code;
                         document.getElementById('orderCustomer').textContent = orderData.customer_name;
-                        document.getElementById('orderProvince').textContent = orderData.province;
-                        document.getElementById('orderAddress').textContent = orderData.address_details;
-                        document.getElementById('orderTotal').textContent = grandTotal.toFixed(2);
                         document.getElementById('orderPhone').textContent = orderData.phone_number;
+                        document.getElementById('orderFullAddress').textContent = `${orderData.province} - ${orderData.address_details}`;
                         document.getElementById('orderPageName').textContent = orderData.page_name || 'غير محدد';
                         document.getElementById('orderEmployee').textContent = orderData.employee_name || 'غير معروف';
+                        document.getElementById('orderShipping').textContent = shipping.toFixed(2);
+                        document.getElementById('orderTotal').textContent = grandTotal.toFixed(2);
                         
-                        // عرض قائمة المنتجات بشكل منسق
-                        const productsList = products.map(p => `• ${p.name}<br>  الحجم: ${p.size}<br>  الكمية: ${p.quantity}<br>  السعر: ${(p.price * p.quantity).toFixed(2)} جنيه`).join('<br><br>');
-                        document.getElementById('orderProductsList').innerHTML = productsList;
+                        // عرض قائمة المنتجات في سطر واحد
+                        const productsList = products.map(p => `${p.name} (${p.size}) × ${p.quantity} = ${(p.price * p.quantity).toFixed(2)} جنيه`).join(' | ');
+                        document.getElementById('orderProductsList').textContent = productsList;
                         
                         // إيقاف الاستماع
                         unsubscribe();
@@ -782,25 +784,24 @@
             const orderCode = document.getElementById('orderCode').textContent;
             const customer = document.getElementById('orderCustomer').textContent;
             const phone = document.getElementById('orderPhone').textContent;
-            const province = document.getElementById('orderProvince').textContent;
-            const address = document.getElementById('orderAddress').textContent;
-            const products = document.getElementById('orderProductsList').innerText;
+            const fullAddress = document.getElementById('orderFullAddress').textContent;
+            const products = document.getElementById('orderProductsList').textContent;
+            const shipping = document.getElementById('orderShipping').textContent;
+            const total = document.getElementById('orderTotal').textContent;
             const pageName = document.getElementById('orderPageName').textContent;
             const employee = document.getElementById('orderEmployee').textContent;
-            const total = document.getElementById('orderTotal').textContent;
             
             const text = `تفاصيل الطلب
 
 كود الطلب: ${orderCode}
 اسم العميل: ${customer}
 رقم الهاتف: ${phone}
-المحافظة: ${province}
-العنوان: ${address}
-المنتجات:
-${products}
+العنوان: ${fullAddress}
+المنتجات: ${products}
+قيمة الشحن: ${shipping} جنيه
+المبلغ الإجمالي: ${total} جنيه
 اسم الصفحة: ${pageName}
-الموظف: ${employee}
-المبلغ الإجمالي: ${total} جنيه`;
+الموظف: ${employee}`;
             
             navigator.clipboard.writeText(text).then(() => {
                 // تغيير النص والأيقونة مؤقتاً
