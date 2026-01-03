@@ -613,8 +613,19 @@
         const db = getFirestore(app);
 
         // Get API Key from URL
+        console.log('========== API KEY EXTRACTION ==========');
+        console.log('window.location.href:', window.location.href);
+        console.log('window.location.search:', window.location.search);
+        
         const urlParams = new URLSearchParams(window.location.search);
         const apiKey = urlParams.get('key');
+        
+        console.log('urlParams object:', urlParams);
+        console.log('urlParams.toString():', urlParams.toString());
+        console.log('Extracted apiKey:', apiKey);
+        console.log('apiKey type:', typeof apiKey);
+        console.log('apiKey length:', apiKey ? apiKey.length : 0);
+        console.log('========================================');
         
         // تخزين المنتجات وبيانات الموظف
         let productsData = [];
@@ -633,8 +644,20 @@
         // التحقق من صحة الموظف
         async function validateEmployee() {
             try {
-                const response = await fetch(`http://localhost:8000/api/external/validate/?api_key=${apiKey}`);
+                console.log('========== VALIDATE EMPLOYEE ==========');
+                console.log('apiKey being sent:', apiKey);
+                const validateUrl = `http://localhost:8000/api/external/validate/?api_key=${apiKey}`;
+                console.log('Full validate URL:', validateUrl);
+                console.log('Sending fetch request...');
+                
+                const response = await fetch(validateUrl);
+                console.log('Response received');
+                console.log('Response status:', response.status);
+                console.log('Response URL:', response.url);
+                
                 const data = await response.json();
+                console.log('Response data:', data);
+                console.log('========================================');
                 
                 if (data.success) {
                     employeeData = data.employee;
@@ -661,17 +684,35 @@
         // جلب المنتجات من الـ API
         async function loadProducts() {
             try {
-                const response = await fetch('http://localhost:8000/api/external/products/');
+                console.log('========== LOAD PRODUCTS ==========');
+                console.log('apiKey being sent:', apiKey);
+                const productsUrl = `http://localhost:8000/api/external/products/?api_key=${apiKey}`;
+                console.log('Full products URL:', productsUrl);
+                console.log('URL length:', productsUrl.length);
+                console.log('Sending fetch request...');
+                
+                const response = await fetch(productsUrl);
+                console.log('Response received');
+                console.log('Response status:', response.status);
+                console.log('Response URL:', response.url);
+                console.log('Response ok:', response.ok);
+                
                 const data = await response.json();
+                console.log('Response data:', data);
+                console.log('===================================');
                 
                 if (data.success) {
                     productsData = data.products;
                     updateProductSelects();
                 } else {
-                    console.error('Error loading products:', data.error);
+                    console.error('Error loading products:', data.message);
+                    document.getElementById('errorMessage').textContent = '❌ ' + data.message;
+                    document.getElementById('errorMessage').style.display = 'block';
                 }
             } catch (error) {
                 console.error('Failed to load products:', error);
+                document.getElementById('errorMessage').textContent = '❌ فشل تحميل المنتجات';
+                document.getElementById('errorMessage').style.display = 'block';
             }
         }
         
