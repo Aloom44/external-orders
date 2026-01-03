@@ -619,6 +619,13 @@
         // تخزين المنتجات وبيانات الموظف
         let productsData = [];
         let employeeData = null;
+        
+        // تحديد API Base URL بناءً على البيئة - يجب تعريفه أولاً
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8000' 
+            : 'https://b3sem.store';
+        
+        console.log('API Base URL:', API_BASE_URL);
 
         if (!apiKey) {
             document.getElementById('errorMessage').textContent = '⚠️ رابط غير صالح. يرجى استخدام الرابط الذي تم إرساله لك.';
@@ -629,11 +636,6 @@
             // التحقق من صحة API Key وجلب بيانات الموظف
             validateEmployee();
         }
-        
-        // تحديد API Base URL بناءً على البيئة
-        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'http://localhost:8000' 
-            : 'https://b3sem.store';
         
         // التحقق من صحة الموظف
         async function validateEmployee() {
