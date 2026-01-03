@@ -267,9 +267,13 @@
                             <td style="padding: 6px 0;"><span id="orderProvince">---</span></td>
                         </tr>
                         <tr style="border-bottom: 1px solid #f0f0f0;">
-                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">المنتجات:</td>
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">العنوان:</td>
+                            <td style="padding: 6px 0;"><span id="orderAddress">---</span></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E; vertical-align: top;">المنتجات:</td>
                             <td style="padding: 6px 0;">
-                                <div id="orderProductsList" style="font-size: 11px; line-height: 1.4;">---</div>
+                                <div id="orderProductsList" style="font-size: 11px; line-height: 1.6;">---</div>
                             </td>
                         </tr>
                         <tr style="border-bottom: 1px solid #f0f0f0;">
@@ -290,7 +294,7 @@
                 </div>
                 
                 <div style="display: flex; gap: 6px; justify-content: center; margin-top: 12px; flex-wrap: wrap;">
-                    <button class="btn btn-success btn-sm" onclick="copyOrderDetails()" style="background: #5fb091; border-color: #5fb091; padding: 6px 15px; font-size: 13px;">
+                    <button class="btn btn-success btn-sm" onclick="copyOrderDetails(event)" style="background: #5fb091; border-color: #5fb091; padding: 6px 15px; font-size: 13px;">
                         <i class="fas fa-copy"></i> نسخ
                     </button>
                     <button class="btn btn-primary btn-sm" onclick="location.reload()" style="padding: 6px 15px; font-size: 13px;">
@@ -331,6 +335,24 @@
                             <option value="القليوبية">القليوبية</option>
                             <option value="البحيرة">البحيرة</option>
                             <option value="الغربية">الغربية</option>
+                            <option value="كفر الشيخ">كفر الشيخ</option>
+                            <option value="دمياط">دمياط</option>
+                            <option value="بورسعيد">بورسعيد</option>
+                            <option value="الإسماعيلية">الإسماعيلية</option>
+                            <option value="السويس">السويس</option>
+                            <option value="المنيا">المنيا</option>
+                            <option value="بني سويف">بني سويف</option>
+                            <option value="الفيوم">الفيوم</option>
+                            <option value="أسيوط">أسيوط</option>
+                            <option value="سوهاج">سوهاج</option>
+                            <option value="قنا">قنا</option>
+                            <option value="الأقصر">الأقصر</option>
+                            <option value="أسوان">أسوان</option>
+                            <option value="البحر الأحمر">البحر الأحمر</option>
+                            <option value="الوادي الجديد">الوادي الجديد</option>
+                            <option value="مطروح">مطروح</option>
+                            <option value="شمال سيناء">شمال سيناء</option>
+                            <option value="جنوب سيناء">جنوب سيناء</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -713,13 +735,14 @@
                         document.getElementById('orderCode').textContent = data.order_code;
                         document.getElementById('orderCustomer').textContent = orderData.customer_name;
                         document.getElementById('orderProvince').textContent = orderData.province;
+                        document.getElementById('orderAddress').textContent = orderData.address_details;
                         document.getElementById('orderTotal').textContent = grandTotal.toFixed(2);
                         document.getElementById('orderPhone').textContent = orderData.phone_number;
                         document.getElementById('orderPageName').textContent = orderData.page_name || 'غير محدد';
                         document.getElementById('orderEmployee').textContent = orderData.employee_name || 'غير معروف';
                         
-                        // عرض قائمة المنتجات
-                        const productsList = products.map(p => `${p.name} (${p.size}) × ${p.quantity} = ${(p.price * p.quantity).toFixed(2)} جنيه`).join('<br>');
+                        // عرض قائمة المنتجات بشكل منسق
+                        const productsList = products.map(p => `• ${p.name}<br>  الحجم: ${p.size}<br>  الكمية: ${p.quantity}<br>  السعر: ${(p.price * p.quantity).toFixed(2)} جنيه`).join('<br><br>');
                         document.getElementById('orderProductsList').innerHTML = productsList;
                         
                         // إيقاف الاستماع
@@ -755,11 +778,12 @@
         });
 
         // دالة نسخ تفاصيل الطلب
-        function copyOrderDetails() {
+        function copyOrderDetails(event) {
             const orderCode = document.getElementById('orderCode').textContent;
             const customer = document.getElementById('orderCustomer').textContent;
             const phone = document.getElementById('orderPhone').textContent;
             const province = document.getElementById('orderProvince').textContent;
+            const address = document.getElementById('orderAddress').textContent;
             const products = document.getElementById('orderProductsList').innerText;
             const pageName = document.getElementById('orderPageName').textContent;
             const employee = document.getElementById('orderEmployee').textContent;
@@ -771,6 +795,7 @@
 اسم العميل: ${customer}
 رقم الهاتف: ${phone}
 المحافظة: ${province}
+العنوان: ${address}
 المنتجات:
 ${products}
 اسم الصفحة: ${pageName}
