@@ -630,10 +630,16 @@
             validateEmployee();
         }
         
+        // تحديد API Base URL بناءً على البيئة
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8000' 
+            : 'https://b3sem.store';
+        
         // التحقق من صحة الموظف
         async function validateEmployee() {
             try {
-                const response = await fetch(`http://localhost:8000/api/external/validate/?api_key=${apiKey}`);
+                console.log('Validating employee with API URL:', `${API_BASE_URL}/api/external/validate/?key=${apiKey}`);
+                const response = await fetch(`${API_BASE_URL}/api/external/validate/?key=${apiKey}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -661,7 +667,8 @@
         // جلب المنتجات من الـ API
         async function loadProducts() {
             try {
-                const response = await fetch('http://localhost:8000/api/external/products/');
+                console.log('Loading products from:', `${API_BASE_URL}/api/external/products/?key=${apiKey}`);
+                const response = await fetch(`${API_BASE_URL}/api/external/products/?key=${apiKey}`);
                 const data = await response.json();
                 
                 if (data.success) {
