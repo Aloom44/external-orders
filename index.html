@@ -873,14 +873,31 @@
                     if (document.getElementById('loading').style.display !== 'none') {
                         document.getElementById('loading').style.display = 'none';
                         document.getElementById('successMessage').style.display = 'block';
-                        document.getElementById('orderCode').textContent = 'تم الإرسال بنجاح - في انتظار المعالجة';
+                        
+                        // رسالة واضحة للموظف
+                        document.getElementById('orderCode').innerHTML = '<span style="color: #D4AF37; font-size: 14px;">⏳ تم إرسال الطلب بنجاح إلى النظام</span><br><span style="color: #6c757d; font-size: 12px;">سيتم توليد كود الطلب عند معالجته</span>';
                         
                         // ملء التفاصيل
                         document.getElementById('orderCustomer').textContent = orderData.customer_name;
-                        document.getElementById('orderProvince').textContent = orderData.province;
-                        document.getElementById('orderProductsCount').textContent = products.length;
-                        document.getElementById('orderTotal').textContent = grandTotal.toFixed(2);
-                        document.getElementById('orderPhone').textContent = orderData.phone_number;
+                        
+                        // عرض رقم الهاتف (مع الثانوي إذا كان موجوداً)
+                        const phoneDisplay = orderData.secondary_phone ? 
+                            `${orderData.phone_number} - ${orderData.secondary_phone}` : 
+                            orderData.phone_number;
+                        document.getElementById('orderPhone').textContent = phoneDisplay;
+                        
+                        document.getElementById('orderFullAddress').textContent = `${orderData.province} - ${orderData.address_details}`;
+                        document.getElementById('orderPageName').textContent = orderData.page_name || 'غير محدد';
+                        document.getElementById('orderEmployee').textContent = orderData.employee_name || 'غير معروف';
+                        document.getElementById('orderShipping').textContent = parseFloat(shipping.toFixed(2));
+                        document.getElementById('orderTotal').textContent = parseFloat(grandTotal.toFixed(2));
+                        
+                        // عرض قائمة المنتجات
+                        const productsList = products.map(p => {
+                            const total = parseFloat((p.price * p.quantity).toFixed(2));
+                            return `${p.name} - ${p.size} - الكمية: ${p.quantity} - السعر: ${total} جنيه`;
+                        }).join(' | ');
+                        document.getElementById('orderProductsList').textContent = productsList;
                         
                         unsubscribe();
                     }
