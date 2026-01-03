@@ -612,13 +612,21 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Get API Key from URL
+        // Get API Key from URL - Make it global
         const urlParams = new URLSearchParams(window.location.search);
-        const apiKey = urlParams.get('key');
+        window.apiKey = urlParams.get('key');
+        const apiKey = window.apiKey;
         
         // تخزين المنتجات وبيانات الموظف
         let productsData = [];
         let employeeData = null;
+        
+        // تحديد API Base URL بناءً على البيئة - يجب تعريفه أولاً
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8000' 
+            : 'https://b3sem.store';
+        
+        console.log('API Base URL:', API_BASE_URL);
 
         if (!apiKey) {
             document.getElementById('errorMessage').textContent = '⚠️ رابط غير صالح. يرجى استخدام الرابط الذي تم إرساله لك.';
@@ -633,7 +641,8 @@
         // التحقق من صحة الموظف
         async function validateEmployee() {
             try {
-                const response = await fetch(`http://localhost:8000/api/external/validate/?api_key=${apiKey}`);
+                console.log('Validating employee with API URL:', `${API_BASE_URL}/api/external/validate/?key=${window.apiKey}`);
+                const response = await fetch(`${API_BASE_URL}/api/external/validate/?key=${window.apiKey}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -661,8 +670,16 @@
         // جلب المنتجات من الـ API
         async function loadProducts() {
             try {
-                const response = await fetch('http://localhost:8000/api/external/products/');
+                console.log('loadProducts called');
+                console.log('apiKey value:', window.apiKey);
+                console.log('apiKey type:', typeof window.apiKey);
+                console.log('API_BASE_URL:', API_BASE_URL);
+                const url = `${API_BASE_URL}/api/external/products/?key=${window.apiKey}`;
+                console.log('Loading products from:', url);
+                const response = await fetch(url);
+                console.log('Response status:', response.status);
                 const data = await response.json();
+                console.log('Response data:', data);
                 
                 if (data.success) {
                     productsData = data.products;
@@ -810,7 +827,7 @@
                 page_name: document.getElementById('pageName').value || '',
                 
                 // معلومات النظام
-                api_key: apiKey,
+                api_key: window.apiKey,
                 employee_id: employeeData ? employeeData.id : null,
                 employee_name: employeeData ? employeeData.name : 'غير معروف',
                 status: 'new',
