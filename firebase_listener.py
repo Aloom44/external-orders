@@ -92,52 +92,74 @@ def create_order_from_firebase(order_data, doc_id):
             # إضافة المنتجات
             products = order_data.get('products', [])
             for product_data in products:
-                # محاولة إيجاد المنتج في قاعدة البيانات
-                product_name = product_data.get('product_name', '')
-                size = product_data.get('size', '')
-                
-                # البحث عن منتج مطابق
                 try:
-                    product = Product.objects.filter(
-                        product_name__icontains=product_name[:20]
-                    ).first()
+                    # محاولة استخدام variant_id مباشرة
+                    variant_id = product_data.get('variant_id')
+                    variant = None
                     
-                    if product:
-                        # البحث عن variant مطابق
-                        variant = ProductVariant.objects.filter(
-                            product=product,
-                            size__icontains=size if size else ''
+                    if variant_id:
+                        try:
+                            variant = ProductVariant.objects.get(id=int(variant_id))
+                            print(f"✅ تم العثور على المتغير مباشرة: {variant.product.product_name} - {variant.size}")
+                        except (ProductVariant.DoesNotExist, ValueError):
+                            print(f"⚠️ لم يتم العثور على المتغير بـ ID: {variant_id}")
+                    
+                    # إذا لم يتم العثور على المتغير، ابحث بالاسم
+                    if not variant:
+                        product_name = product_data.get('name', '')
+                        size = product_data.get('size', '')
+                        
+                        print(f"🔍 البحث عن المنتج: {product_name} - {size}")
+                        
+                        # البحث عن منتج مطابق
+                        product = Product.objects.filter(
+                            product_name__icontains=product_name[:30]
                         ).first()
                         
-                        if not variant:
-                            # استخدام أول variant متاح
-                            variant = product.variants.filter(is_active=True).first()
-                    else:
-                        # منتج غير موجود - استخدام منتج افتراضي
-                        product = Product.objects.first()
-                        variant = product.variants.first() if product else None
+                        if product:
+                            # البحث عن variant مطابق
+                            variant = ProductVariant.objects.filter(
+                                product=product,
+                                size__icontains=size if size else ''
+                            ).first()
+                            
+                            if not variant:
+                                # استخدام أول variant متاح
+                                variant = product.variants.filter(is_active=True).first()
+                                print(f"⚠️ لم يتم العثور على المتغير المحدد، استخدام: {variant.size if variant else 'لا يوجد'}")
+                        else:
+                            print(f"❌ لم يتم العثور على المنتج: {product_name}")
+                            # استخدام منتج افتراضي
+                            product = Product.objects.first()
+                            variant = product.variants.first() if product else None
                     
                     if variant:
                         OrderItem.objects.create(
                             order=order,
                             product_variant=variant,
                             quantity=product_data.get('quantity', 1),
-                            unit_price=float(product_data.get('unit_price', 0))
+                            unit_price=float(product_data.get('price', 0))
                         )
+                        print(f"✅ تم إضافة: {variant.product.product_name} - {variant.size} × {product_data.get('quantity', 1)} بسعر {product_data.get('price', 0)}")
+                    else:
+                        print(f"❌ لم يتم العثور على أي متغير للمنتج")
+                        
                 except Exception as e:
                     print(f"⚠️ خطأ في إضافة منتج: {e}")
+                    import traceback
+                    traceback.print_exc()
                     continue
             
             # تحديث الطلب في Firebase
             db.collection('orders').document(doc_id).update({
-                'order_code': order_code,
+                'order_code': order.order_code,
                 'status': 'completed',
                 'processed': True,
                 'processed_at': firestore.SERVER_TIMESTAMP,
                 'django_order_id': order.id
             })
             
-            print(f"✅ تم إنشاء الطلب: {order_code}")
+            print(f"✅ تم إنشاء الطلب: {order.order_code}")
             print(f"   العميل: {order.customer_name}")
             print(f"   المحافظة: {order.province}")
             print(f"   المبلغ: {order.total_price} جنيه")

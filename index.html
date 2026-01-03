@@ -7,156 +7,217 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
         }
         .order-card {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             overflow: hidden;
         }
         .card-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 25px;
+            padding: 15px;
             text-align: center;
         }
         .card-header h1 {
             margin: 0;
-            font-size: 28px;
+            font-size: 20px;
         }
         .card-body {
-            padding: 30px;
+            padding: 15px;
         }
         .form-label {
             font-weight: 600;
             color: #333;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
+            font-size: 13px;
         }
         .form-control, .form-select {
-            border-radius: 8px;
-            border: 2px solid #e0e0e0;
-            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            font-size: 14px;
         }
         .form-control:focus, .form-select:focus {
             border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            box-shadow: 0 0 0 0.15rem rgba(102, 126, 234, 0.15);
         }
         .section-title {
             background: #f8f9fa;
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin: 25px 0 15px 0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 15px 0 10px 0;
             font-weight: 700;
             color: #667eea;
+            font-size: 14px;
         }
         .btn-submit {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
-            padding: 15px 40px;
-            font-size: 18px;
+            padding: 12px 25px;
+            font-size: 16px;
             font-weight: 600;
-            border-radius: 10px;
+            border-radius: 8px;
             color: white;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 15px;
             transition: transform 0.2s;
         }
         .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
         }
         .product-row {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
         .btn-add-product {
             background: #28a745;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin-top: 10px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 13px;
         }
         .btn-remove-product {
             background: #dc3545;
             color: white;
             border: none;
-            padding: 5px 15px;
-            border-radius: 5px;
-            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
         }
         .price-summary {
             background: #e8f4f8;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
         }
         .price-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            font-size: 16px;
+            padding: 5px 0;
+            font-size: 14px;
         }
         .price-row.total {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
             color: #667eea;
             border-top: 2px solid #667eea;
-            padding-top: 15px;
-            margin-top: 10px;
+            padding-top: 10px;
+            margin-top: 8px;
         }
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
         }
         .success-message {
             display: none;
             background: #d4edda;
             border: 2px solid #28a745;
-            border-radius: 10px;
-            padding: 30px;
+            border-radius: 8px;
+            padding: 15px;
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0;
         }
         .success-message h2 {
             color: #155724;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            font-size: 18px;
         }
         .order-code {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 700;
             color: #667eea;
-            margin: 15px 0;
+            margin: 10px 0;
         }
         .error-message {
             background: #f8d7da;
             border: 2px solid #dc3545;
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 8px;
+            padding: 15px;
             color: #721c24;
-            margin: 20px 0;
+            margin: 10px 0;
             display: none;
+            font-size: 14px;
         }
         .user-info {
             background: #fff3cd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
             text-align: center;
         }
         .user-info strong {
             color: #856404;
-            font-size: 18px;
+            font-size: 14px;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 576px) {
+            body {
+                padding: 5px;
+            }
+            .card-header h1 {
+                font-size: 18px;
+            }
+            .card-body {
+                padding: 10px;
+            }
+            .form-label {
+                font-size: 12px;
+                margin-bottom: 3px;
+            }
+            .form-control, .form-select {
+                padding: 6px 8px;
+                font-size: 13px;
+            }
+            .section-title {
+                padding: 6px 10px;
+                font-size: 13px;
+                margin: 10px 0 8px 0;
+            }
+            .product-row {
+                padding: 8px;
+                margin-bottom: 6px;
+            }
+            .btn-submit {
+                padding: 10px 20px;
+                font-size: 15px;
+            }
+            .price-row {
+                font-size: 13px;
+            }
+            .price-row.total {
+                font-size: 16px;
+            }
+            .mb-3 {
+                margin-bottom: 0.75rem !important;
+            }
+            .row {
+                margin-right: -5px;
+                margin-left: -5px;
+            }
+            .row > * {
+                padding-right: 5px;
+                padding-left: 5px;
+            }
         }
     </style>
 </head>
@@ -179,34 +240,63 @@
 
             <!-- رسالة النجاح -->
             <div class="success-message" id="successMessage">
-                <h2><i class="fas fa-check-circle"></i> تم إضافة الطلب بنجاح!</h2>
-                <div class="order-details" style="text-align: right; margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-                    <div style="margin-bottom: 15px;">
-                        <strong style="color: #152F3E; font-size: 18px;">📋 تفاصيل الطلب:</strong>
+                <h2 style="color: #5fb091; margin-bottom: 12px; font-size: 16px;"><i class="fas fa-check-circle"></i> تم إضافة الطلب بنجاح!</h2>
+                
+                <div class="order-details" id="orderDetailsContainer" style="text-align: right; margin: 10px 0; padding: 12px; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); border: 2px solid #5fb091;">
+                    <div style="margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;">
+                        <strong style="color: #152F3E; font-size: 14px;">تفاصيل الطلب</strong>
                     </div>
-                    <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px;">
-                        <strong>كود الطلب:</strong>
-                        <div class="order-code" id="orderCode" style="margin: 5px 0;">---</div>
-                    </div>
-                    <div style="margin: 10px 0;">
-                        <strong>👤 العميل:</strong> <span id="orderCustomer">---</span>
-                    </div>
-                    <div style="margin: 10px 0;">
-                        <strong>📍 المحافظة:</strong> <span id="orderProvince">---</span>
-                    </div>
-                    <div style="margin: 10px 0;">
-                        <strong>📦 عدد المنتجات:</strong> <span id="orderProductsCount">---</span>
-                    </div>
-                    <div style="margin: 10px 0;">
-                        <strong>💰 المبلغ الإجمالي:</strong> <span id="orderTotal" style="color: #5fb091ff; font-size: 20px; font-weight: bold;">---</span> جنيه
-                    </div>
-                    <div style="margin: 10px 0;">
-                        <strong>📞 رقم الهاتف:</strong> <span id="orderPhone">---</span>
-                    </div>
+                    
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E; width: 35%;">كود الطلب:</td>
+                            <td style="padding: 6px 0;">
+                                <span id="orderCode" style="font-size: 16px; font-weight: bold; color: #5fb091;">---</span>
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">اسم العميل:</td>
+                            <td style="padding: 6px 0;"><span id="orderCustomer">---</span></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">رقم الهاتف:</td>
+                            <td style="padding: 6px 0; direction: ltr; text-align: right;"><span id="orderPhone">---</span></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">المحافظة:</td>
+                            <td style="padding: 6px 0;"><span id="orderProvince">---</span></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">المنتجات:</td>
+                            <td style="padding: 6px 0;">
+                                <div id="orderProductsList" style="font-size: 11px; line-height: 1.4;">---</div>
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">اسم الصفحة:</td>
+                            <td style="padding: 6px 0;"><span id="orderPageName">---</span></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">الموظف:</td>
+                            <td style="padding: 6px 0;"><span id="orderEmployee">---</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0; font-weight: 600; color: #152F3E;">المبلغ الإجمالي:</td>
+                            <td style="padding: 6px 0;">
+                                <span id="orderTotal" style="color: #5fb091; font-size: 16px; font-weight: bold;">---</span> جنيه
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <button class="btn btn-primary mt-3" onclick="location.reload()">
-                    <i class="fas fa-plus"></i> إضافة طلب جديد
-                </button>
+                
+                <div style="display: flex; gap: 6px; justify-content: center; margin-top: 12px; flex-wrap: wrap;">
+                    <button class="btn btn-success btn-sm" onclick="copyOrderDetails()" style="background: #5fb091; border-color: #5fb091; padding: 6px 15px; font-size: 13px;">
+                        <i class="fas fa-copy"></i> نسخ
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="location.reload()" style="padding: 6px 15px; font-size: 13px;">
+                        <i class="fas fa-plus"></i> طلب جديد
+                    </button>
+                </div>
             </div>
 
             <!-- فورم الطلب -->
@@ -623,9 +713,14 @@
                         document.getElementById('orderCode').textContent = data.order_code;
                         document.getElementById('orderCustomer').textContent = orderData.customer_name;
                         document.getElementById('orderProvince').textContent = orderData.province;
-                        document.getElementById('orderProductsCount').textContent = products.length;
                         document.getElementById('orderTotal').textContent = grandTotal.toFixed(2);
                         document.getElementById('orderPhone').textContent = orderData.phone_number;
+                        document.getElementById('orderPageName').textContent = orderData.page_name || 'غير محدد';
+                        document.getElementById('orderEmployee').textContent = orderData.employee_name || 'غير معروف';
+                        
+                        // عرض قائمة المنتجات
+                        const productsList = products.map(p => `${p.name} (${p.size}) × ${p.quantity} = ${(p.price * p.quantity).toFixed(2)} جنيه`).join('<br>');
+                        document.getElementById('orderProductsList').innerHTML = productsList;
                         
                         // إيقاف الاستماع
                         unsubscribe();
@@ -659,8 +754,48 @@
             }
         });
 
+        // دالة نسخ تفاصيل الطلب
+        function copyOrderDetails() {
+            const orderCode = document.getElementById('orderCode').textContent;
+            const customer = document.getElementById('orderCustomer').textContent;
+            const phone = document.getElementById('orderPhone').textContent;
+            const province = document.getElementById('orderProvince').textContent;
+            const products = document.getElementById('orderProductsList').innerText;
+            const pageName = document.getElementById('orderPageName').textContent;
+            const employee = document.getElementById('orderEmployee').textContent;
+            const total = document.getElementById('orderTotal').textContent;
+            
+            const text = `تفاصيل الطلب
+
+كود الطلب: ${orderCode}
+اسم العميل: ${customer}
+رقم الهاتف: ${phone}
+المحافظة: ${province}
+المنتجات:
+${products}
+اسم الصفحة: ${pageName}
+الموظف: ${employee}
+المبلغ الإجمالي: ${total} جنيه`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // تغيير النص والأيقونة مؤقتاً
+                const btn = event.target.closest('button');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                btn.style.background = '#43a047';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '#5fb091';
+                }, 2000);
+            }).catch(err => {
+                alert('فشل النسخ: ' + err);
+            });
+        }
+
         // Make functions global
         window.calculateTotal = calculateTotal;
+        window.copyOrderDetails = copyOrderDetails;
     </script>
 
     <script>
