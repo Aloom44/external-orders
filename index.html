@@ -240,19 +240,23 @@
                         <div class="row align-items-end">
                             <div class="col-md-4 mb-2">
                                 <label class="form-label">اسم المنتج *</label>
-                                <input type="text" class="form-control product-name" required>
+                                <select class="form-control product-select" required onchange="loadVariants(this)">
+                                    <option value="">-- اختر المنتج --</option>
+                                </select>
                             </div>
                             <div class="col-md-3 mb-2">
-                                <label class="form-label">المقاس/الحجم</label>
-                                <input type="text" class="form-control product-size" placeholder="مثال: 125ml">
+                                <label class="form-label">المقاس/الحجم *</label>
+                                <select class="form-control variant-select" required onchange="updatePrice(this)">
+                                    <option value="">-- اختر المقاس --</option>
+                                </select>
                             </div>
                             <div class="col-md-2 mb-2">
                                 <label class="form-label">الكمية *</label>
-                                <input type="number" class="form-control product-quantity" min="1" value="1" required>
+                                <input type="number" class="form-control product-quantity" min="1" value="1" required onchange="calculateTotal()">
                             </div>
                             <div class="col-md-2 mb-2">
-                                <label class="form-label">السعر *</label>
-                                <input type="number" class="form-control product-price" min="0" step="0.01" required>
+                                <label class="form-label">السعر</label>
+                                <input type="number" class="form-control product-price" min="0" step="0.01" required readonly>
                             </div>
                             <div class="col-md-1 mb-2">
                                 <button type="button" class="btn-remove-product" onclick="removeProduct(this)" style="display:none;">
@@ -365,6 +369,9 @@
         // Get API Key from URL
         const urlParams = new URLSearchParams(window.location.search);
         const apiKey = urlParams.get('key');
+        
+        // تخزين المنتجات
+        let productsData = [];
 
         if (!apiKey) {
             document.getElementById('errorMessage').textContent = '⚠️ رابط غير صالح. يرجى استخدام الرابط الذي تم إرساله لك.';
@@ -372,6 +379,75 @@
             document.getElementById('orderForm').style.display = 'none';
         } else {
             document.getElementById('userName').textContent = `مستخدم: ${apiKey.substring(0, 8)}...`;
+            // جلب المنتجات من الـ API
+            loadProducts();
+        }
+        
+        // جلب المنتجات من الـ API
+        async function loadProducts() {
+            try {
+                const response = await fetch('http://localhost:8000/api/external/products/');
+                const data = await response.json();
+                
+                if (data.success) {
+                    productsData = data.products;
+                    updateProductSelects();
+                } else {
+                    console.error('Error loading products:', data.error);
+                }
+            } catch (error) {
+                console.error('Failed to load products:', error);
+            }
+        }
+        
+        // تحديث قوائم المنتجات
+        function updateProductSelects() {
+            document.querySelectorAll('.product-select').forEach(select => {
+                select.innerHTML = '<option value="">-- اختر المنتج --</option>';
+                productsData.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = product.name;
+                    option.dataset.variants = JSON.stringify(product.variants);
+                    select.appendChild(option);
+                });
+            });
+        }
+        
+        // تحميل المتغيرات عند اختيار منتج
+        window.loadVariants = function(selectElement) {
+            const row = selectElement.closest('.product-row');
+            const variantSelect = row.querySelector('.variant-select');
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            
+            variantSelect.innerHTML = '<option value="">-- اختر المقاس --</option>';
+            
+            if (selectedOption.dataset.variants) {
+                const variants = JSON.parse(selectedOption.dataset.variants);
+                variants.forEach(variant => {
+                    const option = document.createElement('option');
+                    option.value = variant.id;
+                    option.textContent = variant.display_name;
+                    option.dataset.price = variant.price;
+                    option.dataset.stock = variant.quantity;
+                    variantSelect.appendChild(option);
+                });
+            }
+            
+            // إعادة تعيين السعر
+            row.querySelector('.product-price').value = '';
+            calculateTotal();
+        }
+        
+        // تحديث السعر عند اختيار المتغير
+        window.updatePrice = function(selectElement) {
+            const row = selectElement.closest('.product-row');
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            
+            if (selectedOption.dataset.price) {
+                row.querySelector('.product-price').value = selectedOption.dataset.price;
+                calculateTotal();
+            }
         }
 
         // حساب الإجمالي
@@ -410,10 +486,22 @@
             // جمع بيانات المنتجات
             const products = [];
             document.querySelectorAll('.product-row').forEach(row => {
-                const name = row.querySelector('.product-name').value;
-                const size = row.querySelector('.product-size').value;
+                const productSelect = row.querySelector('.product-select');
+                const variantSelect = row.querySelector('.variant-select');
+                const productName = productSelect.options[productSelect.selectedIndex].text;
+                const variantName = variantSelect.options[variantSelect.selectedIndex].text;
                 const quantity = parseInt(row.querySelector('.product-quantity').value);
                 const price = parseFloat(row.querySelector('.product-price').value);
+
+                products.push({
+                    product_id: productSelect.value,
+                    variant_id: variantSelect.value,
+                    name: productName,
+                    size: variantName,
+                    quantity: quantity,
+                    price: price
+                });
+            });
 
                 if (name && quantity && price) {
                     products.push({
@@ -506,19 +594,23 @@
                 <div class="row align-items-end">
                     <div class="col-md-4 mb-2">
                         <label class="form-label">اسم المنتج *</label>
-                        <input type="text" class="form-control product-name" required>
+                        <select class="form-control product-select" required onchange="loadVariants(this)">
+                            <option value="">-- اختر المنتج --</option>
+                        </select>
                     </div>
                     <div class="col-md-3 mb-2">
-                        <label class="form-label">المقاس/الحجم</label>
-                        <input type="text" class="form-control product-size" placeholder="مثال: 125ml">
+                        <label class="form-label">المقاس/الحجم *</label>
+                        <select class="form-control variant-select" required onchange="updatePrice(this)">
+                            <option value="">-- اختر المقاس --</option>
+                        </select>
                     </div>
                     <div class="col-md-2 mb-2">
                         <label class="form-label">الكمية *</label>
-                        <input type="number" class="form-control product-quantity" min="1" value="1" required>
+                        <input type="number" class="form-control product-quantity" min="1" value="1" required onchange="calculateTotal()">
                     </div>
                     <div class="col-md-2 mb-2">
-                        <label class="form-label">السعر *</label>
-                        <input type="number" class="form-control product-price" min="0" step="0.01" required>
+                        <label class="form-label">السعر</label>
+                        <input type="number" class="form-control product-price" min="0" step="0.01" required readonly>
                     </div>
                     <div class="col-md-1 mb-2">
                         <button type="button" class="btn-remove-product" onclick="removeProduct(this)">
@@ -529,6 +621,7 @@
             `;
             
             container.appendChild(productRow);
+            updateProductSelects(); // تحديث قائمة المنتجات في الصف الجديد
             updateRemoveButtons();
         }
 
