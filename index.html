@@ -394,17 +394,46 @@
         const urlParams = new URLSearchParams(window.location.search);
         const apiKey = urlParams.get('key');
         
-        // تخزين المنتجات
+        // تخزين المنتجات وبيانات الموظف
         let productsData = [];
+        let employeeData = null;
 
         if (!apiKey) {
             document.getElementById('errorMessage').textContent = '⚠️ رابط غير صالح. يرجى استخدام الرابط الذي تم إرساله لك.';
             document.getElementById('errorMessage').style.display = 'block';
             document.getElementById('orderForm').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'none';
         } else {
-            document.getElementById('userName').textContent = `مستخدم: ${apiKey.substring(0, 8)}...`;
-            // جلب المنتجات من الـ API
-            loadProducts();
+            // التحقق من صحة API Key وجلب بيانات الموظف
+            validateEmployee();
+        }
+        
+        // التحقق من صحة الموظف
+        async function validateEmployee() {
+            try {
+                const response = await fetch(`http://localhost:8000/api/external/validate/?api_key=${apiKey}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    employeeData = data.employee;
+                    document.getElementById('userName').innerHTML = `
+                        <i class="fas fa-user-check" style="color: #28a745;"></i> 
+                        ${employeeData.name} - ${employeeData.role}
+                    `;
+                    // جلب المنتجات بعد التحقق من الموظف
+                    loadProducts();
+                } else {
+                    document.getElementById('errorMessage').textContent = '❌ ' + (data.error || 'مفتاح API غير صالح');
+                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('orderForm').style.display = 'none';
+                    document.getElementById('userName').innerHTML = '<i class="fas fa-exclamation-triangle"></i> غير مصرح';
+                }
+            } catch (error) {
+                console.error('Error validating employee:', error);
+                document.getElementById('errorMessage').textContent = '❌ خطأ في التحقق من الهوية: ' + error.message;
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('orderForm').style.display = 'none';
+            }
         }
         
         // جلب المنتجات من الـ API
@@ -561,6 +590,8 @@
                 
                 // معلومات النظام
                 api_key: apiKey,
+                employee_id: employeeData ? employeeData.id : null,
+                employee_name: employeeData ? employeeData.name : 'غير معروف',
                 status: 'pending',
                 order_code: null,
                 created_at: serverTimestamp(),

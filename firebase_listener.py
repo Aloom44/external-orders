@@ -35,29 +35,7 @@ print(f"⏳ في انتظار طلبات جديدة...")
 print("=" * 60)
 
 
-def generate_order_code():
-    """توليد كود الطلب"""
-    from django.utils import timezone
-    now = timezone.now()
-    year = now.year
-    month = now.month
-    
-    # الحصول على آخر كود في هذا الشهر
-    last_order = Order.objects.filter(
-        created_at__year=year,
-        created_at__month=month
-    ).order_by('-id').first()
-    
-    if last_order and last_order.order_code:
-        try:
-            last_num = int(last_order.order_code.split('-')[-1])
-            next_num = last_num + 1
-        except:
-            next_num = 1
-    else:
-        next_num = 1
-    
-    return f"ORD-{year}-{month:02d}-{next_num:04d}"
+# تم إزالة دالة generate_order_code لأننا هنستخدم ID الطلب نفسه
 
 
 def validate_api_key(api_key):
@@ -90,12 +68,8 @@ def create_order_from_firebase(order_data, doc_id):
         
         # بدء transaction
         with transaction.atomic():
-            # توليد كود الطلب
-            order_code = generate_order_code()
-            
-            # إنشاء الطلب
+            # إنشاء الطلب (بدون order_code أولاً)
             order = Order.objects.create(
-                order_code=order_code,
                 customer_name=order_data.get('customer_name', ''),
                 phone_number=order_data.get('phone_number', ''),
                 secondary_phone_number=order_data.get('secondary_phone', ''),
@@ -108,9 +82,12 @@ def create_order_from_firebase(order_data, doc_id):
                 discount_amount=float(order_data.get('discount', 0)),
                 total_price=float(order_data.get('total_amount', 0)),
                 status='pending',
-                created_by=employee,
-                source='external'  # لتمييز الطلبات الخارجية
+                created_by=employee
             )
+            
+            # تحديث كود الطلب بالـ ID الفعلي (نفس النظام المستخدم في السيستم)
+            order.order_code = f"{order.id:04d}"
+            order.save(update_fields=["order_code"])
             
             # إضافة المنتجات
             products = order_data.get('products', [])
