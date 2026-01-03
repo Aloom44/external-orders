@@ -661,17 +661,21 @@
         // جلب المنتجات من الـ API
         async function loadProducts() {
             try {
-                const response = await fetch('http://localhost:8000/api/external/products/');
+                const response = await fetch(`http://localhost:8000/api/external/products/?api_key=${apiKey}`);
                 const data = await response.json();
                 
                 if (data.success) {
                     productsData = data.products;
                     updateProductSelects();
                 } else {
-                    console.error('Error loading products:', data.error);
+                    console.error('Error loading products:', data.message);
+                    document.getElementById('errorMessage').textContent = '❌ ' + data.message;
+                    document.getElementById('errorMessage').style.display = 'block';
                 }
             } catch (error) {
                 console.error('Failed to load products:', error);
+                document.getElementById('errorMessage').textContent = '❌ فشل تحميل المنتجات';
+                document.getElementById('errorMessage').style.display = 'block';
             }
         }
         
