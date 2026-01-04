@@ -619,10 +619,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Get API Key and System ID from URL
+        // Get API Key, System ID, and Employee Name from URL
         const urlParams = new URLSearchParams(window.location.search);
         const apiKey = urlParams.get('key');
         const systemId = urlParams.get('system') || 'system1';  // افتراضيًا system1
+        const employeeName = urlParams.get('name') || null;  // اسم الموظف من الرابط
         
         // تخزين المنتجات وبيانات الموظف
         let productsData = [];
@@ -654,9 +655,12 @@
                         ...employeeDoc.data()
                     };
                     
+                    // استخدام الاسم من URL إذا كان موجودًا، وإلا استخدم اسم الموظف من Firebase
+                    const displayName = employeeName || employeeData.name || 'موظف';
+                    
                     document.getElementById('userName').innerHTML = `
                         <i class="fas fa-user-check" style="color: #28a745;"></i> 
-                        ${employeeData.name || 'موظف'} - ${employeeData.role || 'عضو فريق'}
+                        ${displayName} - ${employeeData.role || 'عضو فريق'}
                     `;
                     
                     // جلب المنتجات بعد التحقق من الموظف
