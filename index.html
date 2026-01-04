@@ -596,7 +596,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         // Firebase configuration
         const firebaseConfig = {
@@ -612,25 +612,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-<<<<<<< HEAD
-        // Get API Key and API URL from URL
-=======
         // Get API Key from URL
-        console.log('========== API KEY EXTRACTION ==========');
-        console.log('window.location.href:', window.location.href);
-        console.log('window.location.search:', window.location.search);
-        
->>>>>>> fa3573189118bfa6182c15c38a735b987fdba640
         const urlParams = new URLSearchParams(window.location.search);
         const apiKey = urlParams.get('key');
-        const apiUrl = urlParams.get('api_url') || 'http://localhost:8000';
-        
-        console.log('urlParams object:', urlParams);
-        console.log('urlParams.toString():', urlParams.toString());
-        console.log('Extracted apiKey:', apiKey);
-        console.log('apiKey type:', typeof apiKey);
-        console.log('apiKey length:', apiKey ? apiKey.length : 0);
-        console.log('========================================');
         
         // تخزين المنتجات وبيانات الموظف
         let productsData = [];
@@ -642,42 +626,35 @@
             document.getElementById('orderForm').style.display = 'none';
             document.getElementById('userInfo').style.display = 'none';
         } else {
-            // التحقق من صحة API Key وجلب بيانات الموظف
-            validateEmployee();
+            // التحقق من صحة API Key من Firebase مباشرة
+            validateEmployeeFromFirebase();
         }
         
-        // التحقق من صحة الموظف
-        async function validateEmployee() {
+        // التحقق من صحة الموظف من Firebase
+        async function validateEmployeeFromFirebase() {
             try {
-<<<<<<< HEAD
-                const response = await fetch(`${apiUrl}/api/external/validate/?api_key=${apiKey}`);
-=======
-                console.log('========== VALIDATE EMPLOYEE ==========');
-                console.log('apiKey being sent:', apiKey);
-                const validateUrl = `http://localhost:8000/api/external/validate/?api_key=${apiKey}`;
-                console.log('Full validate URL:', validateUrl);
-                console.log('Sending fetch request...');
+                // البحث في Firebase عن الموظف بهذا الـ API Key
+                const employeesRef = collection(db, 'employees');
+                const q = query(employeesRef, where('api_key', '==', apiKey));
+                const querySnapshot = await getDocs(q);
                 
-                const response = await fetch(validateUrl);
-                console.log('Response received');
-                console.log('Response status:', response.status);
-                console.log('Response URL:', response.url);
-                
->>>>>>> fa3573189118bfa6182c15c38a735b987fdba640
-                const data = await response.json();
-                console.log('Response data:', data);
-                console.log('========================================');
-                
-                if (data.success) {
-                    employeeData = data.employee;
+                if (!querySnapshot.empty) {
+                    // الموظف موجود
+                    const employeeDoc = querySnapshot.docs[0];
+                    employeeData = {
+                        id: employeeDoc.id,
+                        ...employeeDoc.data()
+                    };
+                    
                     document.getElementById('userName').innerHTML = `
                         <i class="fas fa-user-check" style="color: #28a745;"></i> 
-                        ${employeeData.name} - ${employeeData.role}
+                        ${employeeData.name || 'موظف'} - ${employeeData.role || 'عضو فريق'}
                     `;
+                    
                     // جلب المنتجات بعد التحقق من الموظف
-                    loadProducts();
+                    loadProductsFromFirebase();
                 } else {
-                    document.getElementById('errorMessage').textContent = '❌ ' + (data.error || 'مفتاح API غير صالح');
+                    document.getElementById('errorMessage').textContent = '❌ مفتاح API غير صالح';
                     document.getElementById('errorMessage').style.display = 'block';
                     document.getElementById('orderForm').style.display = 'none';
                     document.getElementById('userName').innerHTML = '<i class="fas fa-exclamation-triangle"></i> غير مصرح';
@@ -690,41 +667,31 @@
             }
         }
         
-        // جلب المنتجات من الـ API
-        async function loadProducts() {
+        // جلب المنتجات من Firebase
+        async function loadProductsFromFirebase() {
             try {
-<<<<<<< HEAD
-                const response = await fetch(`${apiUrl}/api/external/products/?api_key=${apiKey}`);
-=======
-                console.log('========== LOAD PRODUCTS ==========');
-                console.log('apiKey being sent:', apiKey);
-                const productsUrl = `http://localhost:8000/api/external/products/?api_key=${apiKey}`;
-                console.log('Full products URL:', productsUrl);
-                console.log('URL length:', productsUrl.length);
-                console.log('Sending fetch request...');
+                const productsRef = collection(db, 'products');
+                const querySnapshot = await getDocs(productsRef);
                 
-                const response = await fetch(productsUrl);
-                console.log('Response received');
-                console.log('Response status:', response.status);
-                console.log('Response URL:', response.url);
-                console.log('Response ok:', response.ok);
+                productsData = [];
+                querySnapshot.forEach((doc) => {
+                    const productData = doc.data();
+                    productsData.push({
+                        id: doc.id,
+                        name: productData.name,
+                        variants: productData.variants || []
+                    });
+                });
                 
->>>>>>> fa3573189118bfa6182c15c38a735b987fdba640
-                const data = await response.json();
-                console.log('Response data:', data);
-                console.log('===================================');
-                
-                if (data.success) {
-                    productsData = data.products;
+                if (productsData.length > 0) {
                     updateProductSelects();
                 } else {
-                    console.error('Error loading products:', data.message);
-                    document.getElementById('errorMessage').textContent = '❌ ' + data.message;
+                    document.getElementById('errorMessage').textContent = '❌ لا توجد منتجات متاحة';
                     document.getElementById('errorMessage').style.display = 'block';
                 }
             } catch (error) {
                 console.error('Failed to load products:', error);
-                document.getElementById('errorMessage').textContent = '❌ فشل تحميل المنتجات';
+                document.getElementById('errorMessage').textContent = '❌ فشل تحميل المنتجات: ' + error.message;
                 document.getElementById('errorMessage').style.display = 'block';
             }
         }
