@@ -612,9 +612,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Get API Key from URL
+        // Get API Key and System ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const apiKey = urlParams.get('key');
+        const systemId = urlParams.get('system') || 'system1';  // افتراضيًا system1
         
         // تخزين المنتجات وبيانات الموظف
         let productsData = [];
@@ -634,7 +635,7 @@
         async function validateEmployeeFromFirebase() {
             try {
                 // البحث في Firebase عن الموظف بهذا الـ API Key
-                const employeesRef = collection(db, 'employees');
+                const employeesRef = collection(db, `employees_${systemId}`);
                 const q = query(employeesRef, where('api_key', '==', apiKey));
                 const querySnapshot = await getDocs(q);
                 
@@ -670,7 +671,7 @@
         // جلب المنتجات من Firebase
         async function loadProductsFromFirebase() {
             try {
-                const productsRef = collection(db, 'products');
+                const productsRef = collection(db, `products_${systemId}`);
                 const querySnapshot = await getDocs(productsRef);
                 
                 productsData = [];
