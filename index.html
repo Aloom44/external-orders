@@ -265,11 +265,18 @@
             color: #D4AF37;
             margin-left: 8px;
         }
+
+        /* Footer Styles */
+        footer a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5) !important;
+        }
         
         /* Mobile optimizations */
         @media (max-width: 768px) {
             body {
                 padding-top: 70px;
+                padding-bottom: 20px;
             }
             .app-header {
                 padding: 15px 0;
@@ -1043,5 +1050,29 @@
             });
         }
     </script>
+
+    <!-- Footer -->
+    <footer style="background: linear-gradient(135deg, #2d5f3f 0%, #1a3a28 100%); color: white; padding: 30px 20px; margin-top: 50px; text-align: center; box-shadow: 0 -4px 15px rgba(0,0,0,0.1);">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <!-- WhatsApp Contact -->
+            <div style="margin-bottom: 20px;">
+                <a href="https://wa.me/201032603653" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: #25D366; color: white; padding: 12px 24px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 15px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);">
+                    <i class='bx bxl-whatsapp' style="font-size: 24px;"></i>
+                    <span>تواصل معنا على واتساب</span>
+                </a>
+            </div>
+            
+            <!-- Copyright -->
+            <div style="padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <p style="margin: 0; font-size: 14px; opacity: 0.9;">
+                    جميع الحقوق محفوظة © 2026
+                </p>
+                <p style="margin: 8px 0 0 0; font-size: 15px; font-weight: 600;">
+                    <i class='bx bx-code-alt' style="font-size: 18px; vertical-align: middle;"></i>
+                    تطوير وتصميم: <span style="color: #D4AF37;">A.Ala3m</span>
+                </p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
