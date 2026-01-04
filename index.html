@@ -612,9 +612,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Get API Key from URL
+        // Get API Key and API URL from URL
         const urlParams = new URLSearchParams(window.location.search);
         const apiKey = urlParams.get('key');
+        const apiUrl = urlParams.get('api_url') || 'http://localhost:8000';
         
         // تخزين المنتجات وبيانات الموظف
         let productsData = [];
@@ -633,7 +634,7 @@
         // التحقق من صحة الموظف
         async function validateEmployee() {
             try {
-                const response = await fetch(`http://localhost:8000/api/external/validate/?api_key=${apiKey}`);
+                const response = await fetch(`${apiUrl}/api/external/validate/?api_key=${apiKey}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -661,7 +662,7 @@
         // جلب المنتجات من الـ API
         async function loadProducts() {
             try {
-                const response = await fetch(`http://localhost:8000/api/external/products/?api_key=${apiKey}`);
+                const response = await fetch(`${apiUrl}/api/external/products/?api_key=${apiKey}`);
                 const data = await response.json();
                 
                 if (data.success) {
