@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Architect | Premium SaaS Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #080809;
+            --surface: #121214;
+            --electric-blue: #00D1FF;
+            --cyber-green: #4ADE80;
+            --text-main: #E2E8F0;
+            --text-dim: #94A3B8;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Custom cursor */
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Custom Cursor --- */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 209, 255, 0.5);
+            border: 1px solid var(--electric-blue);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: screen;
+        }
+
+        /* --- Background Grid --- */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 209, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 209, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- Hero Section --- */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hero-node {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 209, 255, 0.1) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: -1;
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.2) translate(50px, -20px); }
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            line-height: 0.9;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #fff, var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-sub {
+            font-family: 'JetBrains+Mono', monospace;
+            color: var(--cyber-green);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+
+        /* --- Bento Grid Section --- */
+        .section {
+            padding: 8rem 10% 4rem;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--electric-blue);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--electric-blue), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .card h3 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--electric-blue);
+            margin-bottom: 1rem;
+        }
+
+        /* --- Global Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--electric-blue);
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--electric-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--electric-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .bento-grid { grid-template-columns: 1fr; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="cursor"></div>
+    <div class="grid-overlay"></div>
+
+    <header>
+        <div class="hero-node" style="top: 20%; left: 20%;"></div>
+        <div class="hero-node" style="bottom: 10%; right: 10%; background: rgba(74, 222, 128, 0.05);"></div>
+        
+        <h1 class="reveal active">I BUILD <span class="gradient-text">SYSTEMS</span>,<br>NOT WEBSITES.</h1>
+        <p class="hero-sub">> FROM CHAOS TO CONTROL_</p>
+        
+        <button class="btn reveal active">Initialize Build V2</button>
+    </header>
+
+    <section class="section">
+        <div class="bento-grid">
+            <div class="card reveal" style="grid-column: span 2;">
+                <h3>01 // ARCHITECTURE</h3>
+                <p>صناعة بنية تحتية برمجية قابلة للتوسع (Scale) تتحمل ملايين العمليات دون انهيار. نركز على استقرار النظام كأولوية قصوى.</p>
+            </div>
+            <div class="card reveal">
+                <h3>02 // AUTOMATION</h3>
+                <p>تكنولوجيا تعمل بينما أنت نائم. أتمتة تدفق البيانات والعمليات المعقدة.</p>
+            </div>
+            <div class="card reveal">
+                <h3>03 // SECURITY</h3>
+                <p>تشفير وحماية الأنظمة من الثغرات قبل حدوثها. الأمان ليس خياراً، بل هو الأساس.</p>
+            </div>
+            <div class="card reveal" style="grid-column: span 2;">
+                <h3>04 // PERFORMANCE</h3>
+                <p>تحسين سرعة الاستجابة إلى أقصى حد ممكن (Low Latency) لضمان أفضل تجربة مستخدم في بيئة الـ SaaS.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="text-align: center;">
+        <h2 class="reveal" style="font-size: 3rem; margin-bottom: 2rem;">"Technology that works while you sleep"</h2>
+        <div class="card reveal" style="display: inline-block; border-color: var(--cyber-green);">
+            <p style="font-family: 'JetBrains Mono', monospace;">Status: System Operational [99.9% Uptime]</p>
+        </div>
+    </section>
+
+    <script>
+        // Custom Cursor Movement
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Hover Effect for Cursor
+        document.querySelectorAll('.card, .btn').forEach(elem => {
+            elem.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(2.5)';
+                cursor.style.backgroundColor = 'transparent';
+            });
+            elem.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.backgroundColor = 'rgba(0, 209, 255, 0.5)';
+            });
+        });
+
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Subtle Parallax on Mouse Move for Hero Nodes
+        document.addEventListener('mousemove', (e) => {
+            const nodes = document.querySelectorAll('.hero-node');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            nodes.forEach(node => {
+                node.style.transform = `translate(${x * 50}px, ${y * 50}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
